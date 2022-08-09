@@ -1,6 +1,7 @@
 package com.etiya.northwind.business.abstracts;
 
 import java.util.List;
+import java.util.Map;
 
 import com.etiya.northwind.business.requests.products.CreateProductRequest;
 import com.etiya.northwind.business.requests.products.DeleteProductRequest;
@@ -16,4 +17,7 @@ public interface ProductService {
 	GetProductByIdResponse getById(int id);
 	List<ProductListResponse>getAll();
 
+	Map<String,Object> getAllPages(int pageNumber, int pageSize);
+
+	Map<String,Object>getAllPagesOrderByEntity(int pageNumber, int pageSize,String entity,String type);
 }

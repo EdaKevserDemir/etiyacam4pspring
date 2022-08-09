@@ -99,10 +99,10 @@ public class CategoryManager implements CategoryService {
         return response ;
     }
 
-public Sort sortType(String property,String type){
+    public Sort sortType(String property,String type){
         if(type.equals("desc"))
             return Sort.by(property).descending();
         else return Sort.by(property).ascending() ;
 
-}
+    }
 }

@@ -17,8 +17,7 @@ public class Product {
 
 	@Id
 	@Column(name = "product_id")
-
-	private int product_Id;
+	private int productId;
 	@Column(name = "product_name")
 	private String productName;
 	@Column(name = "unit_price")
@@ -31,7 +30,8 @@ public class Product {
 	@ManyToOne
 	@JoinColumn(name = "supplier_id")
 	private Supplier supplier;
-
+	@Column(name="discontinued")
+	private int discontinued;
 	@OneToMany(mappedBy = "product")
 	private List<OrderDetail> orderDetails ;
 

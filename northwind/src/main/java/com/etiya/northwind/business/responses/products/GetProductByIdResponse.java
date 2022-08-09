@@ -11,13 +11,17 @@ import lombok.NoArgsConstructor;
 public class GetProductByIdResponse {
     private int productId;
 
+    private int discontinued;
+
     private String productName;
 
     private double unitPrice;
 
     private int unitsInStock;
 
-    private Category categoryId;
+    private int categoryId;
 
-    private Category categoryName;
+    private String categoryName;
+
+    private int supplierId;
 }

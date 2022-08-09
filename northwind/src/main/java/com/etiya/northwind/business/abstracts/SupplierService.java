@@ -7,6 +7,7 @@ import com.etiya.northwind.business.responses.suppliers.GetSupplierByIdResponse;
 import com.etiya.northwind.business.responses.suppliers.SupplierListResponse;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SupplierService {
     void add(CreateSupplierRequest createSupplierRequest);
@@ -14,4 +15,7 @@ public interface SupplierService {
     void delete(DeleteSupplierRequest deleteSupplierRequest);
     GetSupplierByIdResponse getById(int id);
     List<SupplierListResponse>getAll();
+
+    Map<String,Object> getAllPages(int pageNumber, int pageSize);
+    Map<String,Object>getAllPagesOrderByEntity(int pageNumber, int pageSize,String entity,String type);
 }
