@@ -27,5 +27,4 @@ public class Supplier {
     @OneToMany(mappedBy = "supplier")
     List<Product> products;
 
-
 }

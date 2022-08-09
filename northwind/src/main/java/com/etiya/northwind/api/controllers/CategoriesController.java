@@ -7,11 +7,11 @@ import com.etiya.northwind.business.requests.categories.UpdateCategoryRequest;
 import com.etiya.northwind.business.responses.categories.CategoryListResponse;
 import com.etiya.northwind.business.responses.categories.GetCategoryByIdResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -58,4 +58,12 @@ public class CategoriesController {
         return this.categoryService.getAllPages(pageNumber,pageSize);
 
     }
+
+    @GetMapping("/getallpagesorderbyentity")
+    public Map<String,Object> getAllPagesOrderByEntity(@RequestParam int pageNumber,@RequestParam int pageSize,@RequestParam String entity,@RequestParam Optional<String> type){
+
+        return this.categoryService.getAllPagesOrderByEntity(pageNumber,pageSize, entity,type.orElse(""));
+
+    }
+
 }
