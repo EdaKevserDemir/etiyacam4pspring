@@ -12,10 +12,15 @@ import com.etiya.northwind.dataAccess.abstracts.CategoryRepository;
 import com.etiya.northwind.entities.concretes.Category;
 import com.etiya.northwind.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 @Service
 public class CategoryManager implements CategoryService {
@@ -36,7 +41,6 @@ public class CategoryManager implements CategoryService {
 
     @Override
     public void update(UpdateCategoryRequest updateCategoryRequest) {
-        checkIfExistCategoryId(updateCategoryRequest.getCategoryId());
       Category category=this.modelMapperService.forRequest().map(updateCategoryRequest,Category.class);
       categoryRepository.save(category);
 
@@ -44,31 +48,40 @@ public class CategoryManager implements CategoryService {
 
     @Override
     public void delete(DeleteCategoryRequest deleteCategoryRequest) {
-        checkIfExistCategoryId(deleteCategoryRequest.getCategoryId());
         categoryRepository.deleteById(deleteCategoryRequest.getCategoryId());
 
     }
 
     @Override
     public GetCategoryByIdResponse getById(int id) {
-        checkIfExistCategoryId(id);
-        return this.modelMapperService.forResponse().map(id,GetCategoryByIdResponse.class);
+        Category category=this.categoryRepository.findById(id);
+        GetCategoryByIdResponse getCategoryByIdResponse=this.modelMapperService.forResponse().map(category,GetCategoryByIdResponse.class);
+        return getCategoryByIdResponse;
     }
 
     @Override
     public List<CategoryListResponse> getAll() {
         List<Category> result = this.categoryRepository.findAll();
-        List<CategoryListResponse> responses = result.stream().map(category->this.modelMapperService.forResponse().map(category, CategoryListResponse.class)).collect(Collectors.toList());
+        List<CategoryListResponse> responses = result.stream().map(category->this.modelMapperService.forResponse()
+                .map(category, CategoryListResponse.class)).collect(Collectors.toList());
 
         return responses;
     }
 
-    private void checkIfExistCategoryId(int id) {
-        Category category=this.categoryRepository.findById(id);
-        if(category!=null){
-            System.out.println(" exist this category");
+    @Override
+    public Map<String, Object> getAllPages(int pageNumber, int pageSize) {
+        Pageable pageable=PageRequest.of(pageNumber-1,pageSize);
+        Map<String,Object>response=new HashMap<>();
 
-        }
+        Page<Category>categories =categoryRepository.findAll(pageable);
+        response.put("totalElements",categories.getTotalElements()) ;
+        response.put("totalPages",categories.getTotalPages());
+        response.put("currentPage",categories.getNumber()+1);
+        response.put("categories",categories.getContent().stream().map(category ->
+                this.modelMapperService.forResponse().map(category,CategoryListResponse.class)).collect(Collectors.toList()));
 
+        return response ;
     }
+
+
 }

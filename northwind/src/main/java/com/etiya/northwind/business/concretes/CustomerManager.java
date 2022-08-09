@@ -57,17 +57,9 @@ public class CustomerManager implements CustomerService {
     @Override
     public List<CustomerListResponse> getAll() {
         List<Customer> result = this.customerRepository.findAll();
-        List<CustomerListResponse> responses = result.stream().map(customer->this.modelMapperService.forResponse().map(customer,CustomerListResponse.class)).collect(Collectors.toList());
+        List<CustomerListResponse> responses = result.stream().map(customer -> this.modelMapperService.forResponse().
+                map(customer, CustomerListResponse.class)).collect(Collectors.toList());
 
         return responses;
-    }
-
-    private void checkIfExistCategoryId(String id) {
-        Customer customer=this.customerRepository.findById(id);
-        if(customer!=null){
-            System.out.println(" exist this category");
-
-        }
-
     }
 }

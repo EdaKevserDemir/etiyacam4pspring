@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -47,6 +48,14 @@ public class CategoriesController {
     }
     @GetMapping("/getbyid")
     public GetCategoryByIdResponse getById(@RequestParam int id){
+
         return this.categoryService.getById(id);
+    }
+
+    @GetMapping("/getallpages")
+    public Map<String,Object> getAllPages(@RequestParam int pageNumber,@RequestParam int pageSize){
+
+        return this.categoryService.getAllPages(pageNumber,pageSize);
+
     }
 }

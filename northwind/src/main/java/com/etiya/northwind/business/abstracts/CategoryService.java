@@ -9,6 +9,7 @@ import com.etiya.northwind.business.responses.categories.GetCategoryByIdResponse
 import com.etiya.northwind.entities.concretes.Category;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CategoryService {
     void add(CreateCategoryRequest createCategoryRequest);
@@ -16,4 +17,5 @@ public interface CategoryService {
     void delete(DeleteCategoryRequest deleteCategoryRequest);
     GetCategoryByIdResponse getById(int id);
     List<CategoryListResponse> getAll();
+    Map<String,Object> getAllPages(int pageNumber, int pageSize);
 }
