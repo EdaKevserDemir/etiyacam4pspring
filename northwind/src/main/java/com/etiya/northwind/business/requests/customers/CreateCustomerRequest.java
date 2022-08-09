@@ -1,16 +1,13 @@
-package com.etiya.northwind.business.responses.customers;
-
+package com.etiya.northwind.business.requests.customers;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerListResponse {
+public class CreateCustomerRequest {
     private String customerId;
     private String companyName;
     private String contactName;
+    private String contactTitle;
 }

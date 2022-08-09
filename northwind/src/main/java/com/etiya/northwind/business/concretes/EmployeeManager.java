@@ -1,7 +1,11 @@
 package com.etiya.northwind.business.concretes;
 
 import com.etiya.northwind.business.abstracts.EmployeeService;
+import com.etiya.northwind.business.requests.employees.CreateEmployeeRequest;
+import com.etiya.northwind.business.requests.employees.DeleteEmployeeRequest;
+import com.etiya.northwind.business.requests.employees.UpdateEmployeeRequest;
 import com.etiya.northwind.business.responses.employees.EmployeeListResponse;
+import com.etiya.northwind.business.responses.employees.GetEmployeeByIdResponse;
 import com.etiya.northwind.core.utilities.mapping.ModelMapperService;
 import com.etiya.northwind.dataAccess.abstracts.EmployeeRepository;
 import com.etiya.northwind.entities.concretes.Employee;
@@ -23,6 +27,26 @@ public class EmployeeManager implements EmployeeService {
 
         this.modelMapperService=modelMapperService;
         this.employeeRepository = employeeRepository;
+    }
+
+    @Override
+    public void add(CreateEmployeeRequest createEmployeeRequest) {
+
+    }
+
+    @Override
+    public void update(UpdateEmployeeRequest updateEmployeeRequest) {
+
+    }
+
+    @Override
+    public void delete(DeleteEmployeeRequest deleteEmployeeRequest) {
+
+    }
+
+    @Override
+    public GetEmployeeByIdResponse getById(String id) {
+        return null;
     }
 
     @Override

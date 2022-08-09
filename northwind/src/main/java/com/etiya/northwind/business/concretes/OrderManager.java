@@ -2,6 +2,10 @@ package com.etiya.northwind.business.concretes;
 
 
 import com.etiya.northwind.business.abstracts.OrderService;
+import com.etiya.northwind.business.requests.orders.CreateOrderRequest;
+import com.etiya.northwind.business.requests.orders.DeleteOrderRequest;
+import com.etiya.northwind.business.requests.orders.UpdateOrderRequest;
+import com.etiya.northwind.business.responses.orderDetails.GetOrderDetailByIdResponse;
 import com.etiya.northwind.business.responses.orders.OrderListResponse;
 import com.etiya.northwind.core.utilities.mapping.ModelMapperService;
 import com.etiya.northwind.dataAccess.abstracts.OrderRepository;
@@ -22,6 +26,26 @@ public class OrderManager implements OrderService {
     public OrderManager(OrderRepository orderRepository,ModelMapperService modelMapperService) {
         this.modelMapperService=modelMapperService;
         this.orderRepository = orderRepository;
+    }
+
+    @Override
+    public void add(CreateOrderRequest createOrderRequest) {
+
+    }
+
+    @Override
+    public void update(UpdateOrderRequest updateOrderRequest) {
+
+    }
+
+    @Override
+    public void delete(DeleteOrderRequest deleteOrderRequest) {
+
+    }
+
+    @Override
+    public GetOrderDetailByIdResponse getById(int id) {
+        return null;
     }
 
     @Override
