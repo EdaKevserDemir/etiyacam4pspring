@@ -7,6 +7,7 @@ import com.etiya.northwind.business.responses.orderDetails.GetOrderDetailByIdRes
 import com.etiya.northwind.business.responses.orderDetails.OrderDetailListResponse;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrderDetailService {
     void add(CreateOrderDetailRequest createOrderDetailReqest);
@@ -14,4 +15,8 @@ public interface OrderDetailService {
     void delete(DeleteOrderDetailRequest deleteOrderDetailrequest);
     GetOrderDetailByIdResponse getById(int id);
     List<OrderDetailListResponse>getAll();
+
+    Map<String,Object> getAllPages(int pageNumber, int pageSize);
+
+    Map<String,Object>getAllPagesOrderByEntity(int pageNumber, int pageSize,String entity,String type);
 }

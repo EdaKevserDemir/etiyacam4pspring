@@ -13,6 +13,8 @@ import com.etiya.northwind.business.responses.products.GetProductByIdResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -26,7 +28,7 @@ public class ProductsController {
 	}
 
 	@PostMapping("/add")
-	public void add(@RequestBody CreateProductRequest createProductRequest){
+	public void add(@Valid @RequestBody  CreateProductRequest createProductRequest){
 		this.productService.add(createProductRequest);
 
 	}

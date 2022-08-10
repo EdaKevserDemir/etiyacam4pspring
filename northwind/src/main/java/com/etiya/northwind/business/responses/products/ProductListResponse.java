@@ -14,6 +14,10 @@ public class ProductListResponse {
 
 	private int productId;
 
+	private int categoryId;
+
+	private int supplierId;
+
 	private int discontinued;
 
 	private String productName;
@@ -22,10 +26,7 @@ public class ProductListResponse {
 
 	private int unitsInStock;
 
-	private int categoryId;
 
-	private int supplierId;
-	
 	private String categoryName;
 
 

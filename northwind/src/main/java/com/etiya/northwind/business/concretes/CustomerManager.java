@@ -11,11 +11,18 @@ import com.etiya.northwind.core.utilities.mapping.ModelMapperService;
 import com.etiya.northwind.dataAccess.abstracts.CustomerRepository;
 import com.etiya.northwind.entities.concretes.Category;
 import com.etiya.northwind.entities.concretes.Customer;
+import com.etiya.northwind.entities.concretes.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,17 +49,21 @@ public class CustomerManager implements CustomerService {
     public void update(UpdateCustomerRequest updateCustomerRequest) {
 
         Customer customer=this.modelMapperService.forResponse().map(updateCustomerRequest,Customer.class);
+        this.customerRepository.save(customer);
     }
 
     @Override
     public void delete(DeleteCustomerRequest deleteCustomerRequest) {
+        this.customerRepository.deleteById(deleteCustomerRequest.getCustomerId());
 
     }
 
     @Override
-    public GetCustomerByIdResponse getById(int id) {
-        return null;
+    public GetCustomerByIdResponse getById(String id) {
+        Customer customer=this.customerRepository.findById(Integer.valueOf(id));
+       return this.modelMapperService.forResponse().map(customer,GetCustomerByIdResponse.class);
     }
+
 
     @Override
     public List<CustomerListResponse> getAll() {
@@ -61,5 +72,35 @@ public class CustomerManager implements CustomerService {
                 map(customer, CustomerListResponse.class)).collect(Collectors.toList());
 
         return responses;
+    }
+    @Override
+    public Map<String, Object> getAllPages(int pageNumber, int pageSize) {
+        Pageable pageable= PageRequest.of(pageNumber-1,pageSize);
+        return pageableMap(pageable);
+    }
+
+    @Override
+    public Map<String, Object> getAllPagesOrderByEntity(int pageNumber, int pageSize, String entity, String type) {
+        Pageable pageable=PageRequest.of(pageNumber-1,pageSize,sortType(entity,type));
+        return   pageableMap(pageable);
+
+    }
+
+    private Map<String, Object> pageableMap(Pageable pageable){
+        Map<String,Object> response=new HashMap<>();
+        Page<Customer> customers =customerRepository.findAll(pageable);
+        response.put("totalElements",customers.getTotalElements()) ;
+        response.put("totalPages",customers.getTotalPages());
+        response.put("currentPage",customers.getNumber()+1);
+        response.put("customers",customers.getContent().stream().map(customer ->
+                this.modelMapperService.forResponse().map(customer, Sort.Order.class)).collect(Collectors.toList()));
+
+        return response ;
+    }
+    public Sort sortType(String property, String type){
+        if(type.equals("desc"))
+            return Sort.by(property).descending();
+        else return Sort.by(property).ascending() ;
+
     }
 }
