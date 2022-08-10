@@ -7,12 +7,9 @@ import com.etiya.northwind.business.requests.products.DeleteProductRequest;
 import com.etiya.northwind.business.requests.products.UpdateProductRequest;
 import com.etiya.northwind.business.responses.products.GetProductByIdResponse;
 import com.etiya.northwind.business.responses.products.ProductListResponse;
-import com.etiya.northwind.business.responses.suppliers.SupplierListResponse;
 import com.etiya.northwind.core.utilities.mapping.ModelMapperService;
 import com.etiya.northwind.dataAccess.abstracts.ProductRepository;
 import com.etiya.northwind.entities.concretes.Product;
-import com.etiya.northwind.entities.concretes.Supplier;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +100,11 @@ public class ProductManager implements ProductService {
 		if(type.equals("desc"))
 			return Sort.by(property).descending();
 		else return Sort.by(property).ascending() ;
+
+	}
+	@Override
+	public Product findById(int id) {
+		return this.productRepository.findById(id);
 
 	}
 }

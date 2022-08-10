@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class CustomerManager implements CustomerService {
 
     @Override
     public GetCustomerByIdResponse getById(String id) {
-        Customer customer=this.customerRepository.findById(Integer.valueOf(id));
+        Customer customer=this.customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Customer not found"));
        return this.modelMapperService.forResponse().map(customer,GetCustomerByIdResponse.class);
     }
 

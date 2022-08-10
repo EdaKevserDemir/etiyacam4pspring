@@ -1,6 +1,8 @@
 package com.etiya.northwind.business.concretes;
 
 import com.etiya.northwind.business.abstracts.OrderDetailService;
+import com.etiya.northwind.business.abstracts.OrderService;
+import com.etiya.northwind.business.abstracts.ProductService;
 import com.etiya.northwind.business.requests.orderDetails.CreateOrderDetailRequest;
 import com.etiya.northwind.business.requests.orderDetails.DeleteOrderDetailRequest;
 import com.etiya.northwind.business.requests.orderDetails.UpdateOrderDetailRequest;
@@ -30,11 +32,15 @@ public class OrderDetailManager implements OrderDetailService {
 
     private OrderDetailRepository orderDetailRepository;
     private ModelMapperService modelMapperService;
+    private final OrderService orderService;
+    private final ProductService productService;
 
     @Autowired
-    public OrderDetailManager(OrderDetailRepository orderDetailRepository,ModelMapperService modelMapperService) {
+    public OrderDetailManager(OrderDetailRepository orderDetailRepository, ModelMapperService modelMapperService, OrderService orderService, ProductService productService) {
         this.orderDetailRepository = orderDetailRepository;
         this.modelMapperService=modelMapperService;
+        this.orderService = orderService;
+        this.productService = productService;
     }
 
     @Override
@@ -52,26 +58,47 @@ public class OrderDetailManager implements OrderDetailService {
     }
 
     @Override
-    public void delete(DeleteOrderDetailRequest deleteOrderDetailrequest) {
-
-     //   this.orderDetailRepository.deleteById(deleteOrderDetailrequest.getOrderDetail().);
+    public void delete(DeleteOrderDetailRequest deleteOrderDetailRequest) {
+        this.orderDetailRepository.deleteById(deleteOrderDetailRequest.getOrderDetailId());
     }
 
     @Override
-    public GetOrderDetailByIdResponse getById(int id) {
-
-
-
-        return null;
+    public GetOrderDetailByIdResponse getById(int orderId, int productId) {
+        OrderDetail orderDetail = this.orderDetailRepository.findById(createOrderDetailId(orderId, productId)).get();
+        return orderDetailMapping(orderId, productId, orderDetail);
     }
+
 
     @Override
     public List<OrderDetailListResponse> getAll() {
-        List<OrderDetail> result=this.orderDetailRepository.findAll();
-        List<OrderDetailListResponse> responses = result.stream().map(orderDetail -> this.modelMapperService.forResponse().map(orderDetail,OrderDetailListResponse.class)).collect(Collectors.toList());
+        List<OrderDetail> result = this.orderDetailRepository.findAll();
+        List<OrderDetailListResponse> response =result.stream().map(orderDetail ->
+                orderDetailMappingList(orderDetail.getOrderId(), orderDetail.getProductId(), orderDetail)).collect(Collectors.toList());
 
-        return responses;
+        return response;
     }
+
+
+    private GetOrderDetailByIdResponse orderDetailMapping(int orderId, int productId, OrderDetail orderDetail) {
+        GetOrderDetailByIdResponse getOrderDetailByIdResponse = this.modelMapperService.forResponse().map(orderDetail, GetOrderDetailByIdResponse.class);
+        Order order = this.orderService.findById(orderId);
+        Product product = this.productService.findById(productId);
+        getOrderDetailByIdResponse.setContactName(order.getCustomer().getContactName());
+        getOrderDetailByIdResponse.setOrderDate(order.getOrderDate());
+        getOrderDetailByIdResponse.setProductName(product.getProductName());
+        return getOrderDetailByIdResponse;
+    }
+    private OrderDetailListResponse orderDetailMappingList(int orderId, int productId, OrderDetail orderDetail) {
+        OrderDetailListResponse orderDetailListResponse = this.modelMapperService.forResponse()
+                .map(orderDetail, OrderDetailListResponse.class);
+        Order order = this.orderService.findById(orderId);
+        Product product = this.productService.findById(productId);
+        orderDetailListResponse.setContactName(order.getCustomer().getContactName());
+        orderDetailListResponse.setOrderDate(order.getOrderDate());
+        orderDetailListResponse.setProductName(product.getProductName());
+        return orderDetailListResponse;
+    }
+
 
     @Override
     public Map<String, Object> getAllPages(int pageNumber, int pageSize) {
@@ -102,5 +129,12 @@ public class OrderDetailManager implements OrderDetailService {
             return Sort.by(property).descending();
         else return Sort.by(property).ascending() ;
 
+    }
+
+    private OrderDetailId createOrderDetailId(int orderId, int productId) {
+        OrderDetailId orderDetailId = new OrderDetailId();
+        orderDetailId.setOrderId(orderId);
+        orderDetailId.setProductId(productId);
+        return orderDetailId;
     }
 }

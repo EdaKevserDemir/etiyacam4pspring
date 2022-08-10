@@ -20,4 +20,6 @@ public interface ProductService {
 	Map<String,Object> getAllPages(int pageNumber, int pageSize);
 
 	Map<String,Object>getAllPagesOrderByEntity(int pageNumber, int pageSize,String entity,String type);
+
+    Product findById(int id);
 }

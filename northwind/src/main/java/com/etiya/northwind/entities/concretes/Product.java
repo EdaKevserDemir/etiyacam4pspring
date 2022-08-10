@@ -32,7 +32,6 @@ public class Product {
 	private Supplier supplier;
 	@Column(name="discontinued")
 	private int discontinued;
-	@OneToMany(mappedBy = "product")
-	private List<OrderDetail> orderDetails ;
+
 
 }

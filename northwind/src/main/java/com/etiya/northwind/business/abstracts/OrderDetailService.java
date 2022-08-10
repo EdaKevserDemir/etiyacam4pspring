@@ -13,7 +13,9 @@ public interface OrderDetailService {
     void add(CreateOrderDetailRequest createOrderDetailReqest);
     void update(UpdateOrderDetailRequest updateOrderDetailRequest);
     void delete(DeleteOrderDetailRequest deleteOrderDetailrequest);
-    GetOrderDetailByIdResponse getById(int id);
+
+    GetOrderDetailByIdResponse getById(int orderId, int productId);
+
     List<OrderDetailListResponse>getAll();
 
     Map<String,Object> getAllPages(int pageNumber, int pageSize);

@@ -1,6 +1,7 @@
 package com.etiya.northwind.business.requests.orderDetails;
 
 import com.etiya.northwind.entities.concretes.OrderDetail;
+import com.etiya.northwind.entities.concretes.OrderDetailId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeleteOrderDetailRequest {
-    private OrderDetail orderDetail;
+    private OrderDetailId orderDetailId;
 }

@@ -7,12 +7,9 @@ import com.etiya.northwind.business.requests.orders.DeleteOrderRequest;
 import com.etiya.northwind.business.requests.orders.UpdateOrderRequest;
 import com.etiya.northwind.business.responses.orders.GetOrderByIdResponse;
 import com.etiya.northwind.business.responses.orders.OrderListResponse;
-import com.etiya.northwind.business.responses.suppliers.SupplierListResponse;
 import com.etiya.northwind.core.utilities.mapping.ModelMapperService;
 import com.etiya.northwind.dataAccess.abstracts.OrderRepository;
 import com.etiya.northwind.entities.concretes.Order;
-import com.etiya.northwind.entities.concretes.Supplier;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,5 +96,10 @@ public class OrderManager implements OrderService {
             return Sort.by(property).descending();
         else return Sort.by(property).ascending() ;
 
+    }
+    @Override
+    public Order findById(int id) {
+        Order order= this.orderRepository.findById(id);
+        return order;
     }
 }

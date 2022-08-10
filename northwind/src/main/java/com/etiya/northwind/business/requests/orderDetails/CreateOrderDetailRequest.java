@@ -12,7 +12,6 @@ import java.time.LocalDate;
 public class CreateOrderDetailRequest {
     private int orderId;
     private int productId;
-    private LocalDate orderDate;
     private double unitPrice;
     private int quantity;
     private double discount;
