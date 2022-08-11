@@ -5,9 +5,14 @@ import com.etiya.northwind.business.abstracts.ProductService;
 import com.etiya.northwind.business.requests.products.CreateProductRequest;
 import com.etiya.northwind.business.requests.products.DeleteProductRequest;
 import com.etiya.northwind.business.requests.products.UpdateProductRequest;
-import com.etiya.northwind.business.responses.products.GetProductByIdResponse;
-import com.etiya.northwind.business.responses.products.ProductListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.products.GetProductByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.products.ProductListResponse;
+import com.etiya.northwind.core.exceptions.BusinessException;
 import com.etiya.northwind.core.utilities.mapping.ModelMapperService;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
+import com.etiya.northwind.core.utilities.results.SuccessDataResult;
+import com.etiya.northwind.core.utilities.results.SuccessResult;
 import com.etiya.northwind.dataAccess.abstracts.ProductRepository;
 import com.etiya.northwind.entities.concretes.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,38 +39,43 @@ public class ProductManager implements ProductService {
 	}
 
 	@Override
-	public void add(CreateProductRequest createProductRequest) {
+	public Result add(CreateProductRequest createProductRequest) {
+
+		checkProductCount(createProductRequest.getCategoryId());
+
 		Product product=this.modelMapperService.forRequest().map(createProductRequest,Product.class);
-		productRepository.save(product);
-
+		this.productRepository.save(product);
+		return new SuccessResult("Product added");
 	}
 
 	@Override
-	public void update(UpdateProductRequest updateProductRequest) {
+	public Result update(UpdateProductRequest updateProductRequest) {
 		Product product=this.modelMapperService.forRequest().map(updateProductRequest,Product.class);
-		productRepository.save(product);
+		this.productRepository.save(product);
+		return new SuccessResult("Product updated");
 	}
 
 	@Override
-	public void delete(DeleteProductRequest deleteProductRequest) {
+	public Result delete(DeleteProductRequest deleteProductRequest) {
 
 		this.productRepository.deleteById(deleteProductRequest.getProductId());
+		return new SuccessResult("Product deleted");
 	}
 
 	@Override
-	public GetProductByIdResponse getById(int id) {
+	public DataResult<GetProductByIdResponse> getById(int id) {
 		Product product=this.productRepository.findById(id);
 		GetProductByIdResponse getProductByIdResponse=this.modelMapperService.forResponse().map(product,GetProductByIdResponse.class);
-		return getProductByIdResponse;
+		return new SuccessDataResult<GetProductByIdResponse>(getProductByIdResponse,"") ;
 	}
 
 	@Override
-	public List<ProductListResponse> getAll() {
+	public DataResult<List<ProductListResponse>>getAll() {
 		List<Product> result = this.productRepository.findAll();
 		List<ProductListResponse> response = result.stream().map(product->this.modelMapperService.forResponse()
 				.map(product,ProductListResponse.class)).collect(Collectors.toList());
 
-		return response;
+		return new SuccessDataResult<List<ProductListResponse>>(response);
 	}
 
 	@Override
@@ -107,4 +117,14 @@ public class ProductManager implements ProductService {
 		return this.productRepository.findById(id);
 
 	}
+
+	private void checkProductCount(int categoryId){
+		List<Product> products=productRepository.findByCategoryCategoryId(categoryId);
+		if(products.size()>14)
+		{
+			throw  new BusinessException("Category limit exceeded");
+		}
+
+	}
+
 }

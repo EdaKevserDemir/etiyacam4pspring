@@ -4,11 +4,14 @@ import com.etiya.northwind.business.abstracts.CustomerService;
 import com.etiya.northwind.business.requests.customers.CreateCustomerRequest;
 import com.etiya.northwind.business.requests.customers.DeleteCustomerRequest;
 import com.etiya.northwind.business.requests.customers.UpdateCustomerRequest;
-import com.etiya.northwind.business.responses.customers.CustomerListResponse;
-import com.etiya.northwind.business.responses.customers.GetCustomerByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.customers.CustomerListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.customers.GetCustomerByIdResponse;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,29 +28,30 @@ public class CustomersController {
     }
 
     @PostMapping("/add")
-    public void add(@RequestBody CreateCustomerRequest createCustomerRequest){
-        this.customerService.add(createCustomerRequest);
+    public Result add(@Valid  @RequestBody CreateCustomerRequest createCustomerRequest){
+        return this.customerService.add(createCustomerRequest);
 
     }
 
     @PostMapping("/update")
-    public void update(@RequestBody UpdateCustomerRequest updateCustomerRequest){
-        this.customerService.update(updateCustomerRequest);
+    public Result update(@RequestBody UpdateCustomerRequest updateCustomerRequest){
+
+    return this.customerService.update(updateCustomerRequest);
 
     }
     @PostMapping("/delete")
-    public void delete(@RequestBody DeleteCustomerRequest deleteCustomerRequest){
-        this.customerService.delete(deleteCustomerRequest);
+    public Result delete(@RequestBody DeleteCustomerRequest deleteCustomerRequest){
+       return this.customerService.delete(deleteCustomerRequest);
     }
 
 
     @GetMapping("/getAll")
-    public List<CustomerListResponse> getAll() {
+    public DataResult<List<CustomerListResponse>> getAll() {
 
         return this.customerService.getAll();
     }
     @GetMapping("/getbyid")
-    public GetCustomerByIdResponse getById(@RequestParam String id){
+    public DataResult<GetCustomerByIdResponse> getById(@RequestParam String id){
 
         return this.customerService.getById(id);
     }

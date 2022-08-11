@@ -7,8 +7,10 @@ import com.etiya.northwind.business.requests.suppliers.CreateSupplierRequest;
 import com.etiya.northwind.business.requests.suppliers.DeleteSupplierRequest;
 import com.etiya.northwind.business.requests.suppliers.UpdateSupplierRequest;
 
-import com.etiya.northwind.business.responses.suppliers.GetSupplierByIdResponse;
-import com.etiya.northwind.business.responses.suppliers.SupplierListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.suppliers.GetSupplierByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.suppliers.SupplierListResponse;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,29 +30,29 @@ public class SuppliersController {
     }
 
     @PostMapping("/add")
-    public void add(@RequestBody CreateSupplierRequest createSupplierRequest){
-        this.supplierService.add(createSupplierRequest);
+    public Result add(@RequestBody CreateSupplierRequest createSupplierRequest){
+       return this.supplierService.add(createSupplierRequest);
 
     }
 
     @PostMapping("/update")
-    public void update(@RequestBody UpdateSupplierRequest updateSupplierRequest){
-        this.supplierService.update(updateSupplierRequest);
+    public Result update(@RequestBody UpdateSupplierRequest updateSupplierRequest){
+        return this.supplierService.update(updateSupplierRequest);
 
     }
     @PostMapping("/delete")
-    public void delete(@RequestBody DeleteSupplierRequest deleteSupplierRequest){
-        this.supplierService.delete(deleteSupplierRequest);
+    public Result delete(@RequestBody DeleteSupplierRequest deleteSupplierRequest){
+        return this.supplierService.delete(deleteSupplierRequest);
     }
 
 
     @GetMapping("/getAll")
-    public List<SupplierListResponse> getAll() {
+    public DataResult<List<SupplierListResponse>> getAll() {
 
         return this.supplierService.getAll();
     }
     @GetMapping("/getbyid")
-    public GetSupplierByIdResponse getById(@RequestParam int id){
+    public DataResult<GetSupplierByIdResponse> getById(@RequestParam int id){
 
         return this.supplierService.getById(id);
     }

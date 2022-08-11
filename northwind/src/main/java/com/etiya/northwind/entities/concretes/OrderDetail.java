@@ -14,6 +14,7 @@ import javax.persistence.*;
 @IdClass(OrderDetailId.class)
 public class OrderDetail {
 
+
     @Id
     private int orderId;
 

@@ -12,5 +12,6 @@ public class CreateEmployeeRequest {
     private String firstName;
     private String lastName;
     private String title;
+    private int reportsTo;
 
 }

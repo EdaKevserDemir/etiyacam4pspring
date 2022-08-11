@@ -6,9 +6,13 @@ import com.etiya.northwind.business.abstracts.ProductService;
 import com.etiya.northwind.business.requests.orderDetails.CreateOrderDetailRequest;
 import com.etiya.northwind.business.requests.orderDetails.DeleteOrderDetailRequest;
 import com.etiya.northwind.business.requests.orderDetails.UpdateOrderDetailRequest;
-import com.etiya.northwind.business.responses.orderDetails.GetOrderDetailByIdResponse;
-import com.etiya.northwind.business.responses.orderDetails.OrderDetailListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.orderDetails.GetOrderDetailByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.orderDetails.OrderDetailListResponse;
 import com.etiya.northwind.core.utilities.mapping.ModelMapperService;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
+import com.etiya.northwind.core.utilities.results.SuccessDataResult;
+import com.etiya.northwind.core.utilities.results.SuccessResult;
 import com.etiya.northwind.dataAccess.abstracts.OrderDetailRepository;
 import com.etiya.northwind.entities.concretes.Order;
 import com.etiya.northwind.entities.concretes.OrderDetail;
@@ -21,7 +25,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,38 +47,42 @@ public class OrderDetailManager implements OrderDetailService {
     }
 
     @Override
-    public void add(CreateOrderDetailRequest createOrderDetailReqest) {
+    public Result add(CreateOrderDetailRequest createOrderDetailReqest) {
 
         OrderDetail orderDetail=this.modelMapperService.forRequest().map(createOrderDetailReqest,OrderDetail.class);
         this.orderDetailRepository.save(orderDetail);
-
+         return new SuccessResult();
     }
 
     @Override
-    public void update(UpdateOrderDetailRequest updateOrderDetailRequest) {
+    public Result update(UpdateOrderDetailRequest updateOrderDetailRequest) {
         OrderDetail orderDetail=this.modelMapperService.forRequest().map(updateOrderDetailRequest,OrderDetail.class);
         this.orderDetailRepository.save(orderDetail);
+        return new SuccessResult();
+
     }
 
     @Override
-    public void delete(DeleteOrderDetailRequest deleteOrderDetailRequest) {
+    public Result delete(DeleteOrderDetailRequest deleteOrderDetailRequest) {
         this.orderDetailRepository.deleteById(deleteOrderDetailRequest.getOrderDetailId());
+        return new SuccessResult();
+
     }
 
     @Override
-    public GetOrderDetailByIdResponse getById(int orderId, int productId) {
+    public DataResult<GetOrderDetailByIdResponse> getById(int orderId, int productId) {
         OrderDetail orderDetail = this.orderDetailRepository.findById(createOrderDetailId(orderId, productId)).get();
-        return orderDetailMapping(orderId, productId, orderDetail);
+        return new SuccessDataResult<>(orderDetailMapping(orderId, productId, orderDetail));
     }
 
 
     @Override
-    public List<OrderDetailListResponse> getAll() {
+    public DataResult<List<OrderDetailListResponse>> getAll() {
         List<OrderDetail> result = this.orderDetailRepository.findAll();
         List<OrderDetailListResponse> response =result.stream().map(orderDetail ->
                 orderDetailMappingList(orderDetail.getOrderId(), orderDetail.getProductId(), orderDetail)).collect(Collectors.toList());
 
-        return response;
+        return new SuccessDataResult<>(response) ;
     }
 
 

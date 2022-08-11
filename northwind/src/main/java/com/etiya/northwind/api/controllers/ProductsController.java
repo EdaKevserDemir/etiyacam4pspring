@@ -8,8 +8,10 @@ import com.etiya.northwind.business.abstracts.ProductService;
 import com.etiya.northwind.business.requests.products.CreateProductRequest;
 import com.etiya.northwind.business.requests.products.DeleteProductRequest;
 import com.etiya.northwind.business.requests.products.UpdateProductRequest;
-import com.etiya.northwind.business.responses.products.ProductListResponse;
-import com.etiya.northwind.business.responses.products.GetProductByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.products.ProductListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.products.GetProductByIdResponse;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,29 +30,29 @@ public class ProductsController {
 	}
 
 	@PostMapping("/add")
-	public void add(@Valid @RequestBody  CreateProductRequest createProductRequest){
-		this.productService.add(createProductRequest);
+	public Result add(@Valid @RequestBody  CreateProductRequest createProductRequest){
+		return this.productService.add(createProductRequest);
 
 	}
 
 	@PostMapping("/update")
-	public void update(@RequestBody UpdateProductRequest updateProductRequest){
-		this.productService.update(updateProductRequest);
+	public Result update(@RequestBody UpdateProductRequest updateProductRequest){
+		return this.productService.update(updateProductRequest);
 
 	}
 	@PostMapping("/delete")
-	public void delete(@RequestBody DeleteProductRequest deleteProductRequest){
-		this.productService.delete(deleteProductRequest);
+	public Result delete(@RequestBody DeleteProductRequest deleteProductRequest){
+		return this.productService.delete(deleteProductRequest);
 	}
 
 
 	@GetMapping("/getAll")
-	public List<ProductListResponse> getAll() {
+	public DataResult<List<ProductListResponse> > getAll() {
 
 		return this.productService.getAll();
 	}
 	@GetMapping("/getbyid")
-	public GetProductByIdResponse getById(@RequestParam int id){
+	public DataResult<GetProductByIdResponse> getById(@RequestParam int id){
 
 		return this.productService.getById(id);
 	}

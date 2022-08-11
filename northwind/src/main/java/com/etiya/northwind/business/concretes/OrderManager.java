@@ -5,9 +5,13 @@ import com.etiya.northwind.business.abstracts.OrderService;
 import com.etiya.northwind.business.requests.orders.CreateOrderRequest;
 import com.etiya.northwind.business.requests.orders.DeleteOrderRequest;
 import com.etiya.northwind.business.requests.orders.UpdateOrderRequest;
-import com.etiya.northwind.business.responses.orders.GetOrderByIdResponse;
-import com.etiya.northwind.business.responses.orders.OrderListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.orders.GetOrderByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.orders.OrderListResponse;
 import com.etiya.northwind.core.utilities.mapping.ModelMapperService;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
+import com.etiya.northwind.core.utilities.results.SuccessDataResult;
+import com.etiya.northwind.core.utilities.results.SuccessResult;
 import com.etiya.northwind.dataAccess.abstracts.OrderRepository;
 import com.etiya.northwind.entities.concretes.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,37 +38,39 @@ public class OrderManager implements OrderService {
     }
 
     @Override
-    public void add(CreateOrderRequest createOrderRequest) {
+    public Result add(CreateOrderRequest createOrderRequest) {
         Order order=this.modelMapperService.forRequest().map(createOrderRequest, Order.class);
         this.orderRepository.save(order);
 
+        return new SuccessResult();
     }
 
     @Override
-    public void update(UpdateOrderRequest updateOrderRequest) {
+    public Result update(UpdateOrderRequest updateOrderRequest) {
         Order order=this.modelMapperService.forRequest().map(updateOrderRequest, Order.class);
         this.orderRepository.save(order);
+        return new SuccessResult();
     }
 
     @Override
-    public void delete(DeleteOrderRequest deleteOrderRequest) {
+    public Result delete(DeleteOrderRequest deleteOrderRequest) {
         this.orderRepository.deleteById(deleteOrderRequest.getOrderId());
-
+        return new SuccessResult();
     }
 
     @Override
-    public GetOrderByIdResponse getById(int id) {
+    public DataResult<GetOrderByIdResponse> getById(int id) {
         Order order=this.orderRepository.findById(id);
         GetOrderByIdResponse getOrderByIdResponse=this.modelMapperService.forResponse().map(order,GetOrderByIdResponse.class);
-        return  getOrderByIdResponse;
+        return  new SuccessDataResult<>(getOrderByIdResponse);
     }
 
     @Override
-    public List<OrderListResponse> getAll() {
+    public DataResult<List<OrderListResponse>> getAll() {
         List<Order> result = this.orderRepository.findAll();
         List<OrderListResponse> responses = result.stream().map(order -> this.modelMapperService.forResponse().map(order,OrderListResponse.class)).collect(Collectors.toList());
 
-        return responses;
+        return new SuccessDataResult<>(responses);
     }
 
     @Override

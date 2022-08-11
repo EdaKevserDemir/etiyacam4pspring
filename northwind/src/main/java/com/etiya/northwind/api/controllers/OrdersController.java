@@ -6,8 +6,10 @@ import com.etiya.northwind.business.requests.orders.CreateOrderRequest;
 import com.etiya.northwind.business.requests.orders.DeleteOrderRequest;
 import com.etiya.northwind.business.requests.orders.UpdateOrderRequest;
 
-import com.etiya.northwind.business.responses.orders.GetOrderByIdResponse;
-import com.etiya.northwind.business.responses.orders.OrderListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.orders.GetOrderByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.orders.OrderListResponse;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,29 +29,29 @@ public class OrdersController {
     }
 
     @PostMapping("/add")
-    public void add(@RequestBody CreateOrderRequest createOrderRequest){
-        this.orderService.add(createOrderRequest);
+    public Result add(@RequestBody CreateOrderRequest createOrderRequest){
+       return this.orderService.add(createOrderRequest);
 
     }
 
     @PostMapping("/update")
-    public void update(@RequestBody UpdateOrderRequest updateOrderRequest){
-        this.orderService.update(updateOrderRequest);
+    public Result update(@RequestBody UpdateOrderRequest updateOrderRequest){
+       return this.orderService.update(updateOrderRequest);
 
     }
     @PostMapping("/delete")
-    public void delete(@RequestBody DeleteOrderRequest deleteOrderRequest){
-        this.orderService.delete(deleteOrderRequest);
+    public Result delete(@RequestBody DeleteOrderRequest deleteOrderRequest){
+       return this.orderService.delete(deleteOrderRequest);
     }
 
 
     @GetMapping("/getAll")
-    public List<OrderListResponse> getAll() {
+    public DataResult<List<OrderListResponse>> getAll() {
 
         return this.orderService.getAll();
     }
     @GetMapping("/getbyid")
-    public GetOrderByIdResponse getById(@RequestParam int id){
+    public DataResult<GetOrderByIdResponse>getById(@RequestParam int id){
 
         return this.orderService.getById(id);
     }

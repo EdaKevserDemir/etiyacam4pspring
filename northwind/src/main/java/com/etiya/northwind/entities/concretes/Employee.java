@@ -24,4 +24,14 @@ public class Employee {
     private String title;
     @OneToMany(mappedBy = "employee")
     private List<Order> orders;
+    @Column(name ="reports_to")
+    private int reportsTo;
+
+    @ManyToOne
+    @JoinColumn(name="country_id")
+    private Country country;
+
+    @ManyToOne
+    @JoinColumn(name="city_id")
+    private City city;
 }

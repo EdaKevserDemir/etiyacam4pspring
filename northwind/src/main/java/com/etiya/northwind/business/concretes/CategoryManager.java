@@ -4,9 +4,14 @@ import com.etiya.northwind.business.abstracts.CategoryService;
 import com.etiya.northwind.business.requests.categories.CreateCategoryRequest;
 import com.etiya.northwind.business.requests.categories.DeleteCategoryRequest;
 import com.etiya.northwind.business.requests.categories.UpdateCategoryRequest;
-import com.etiya.northwind.business.responses.categories.CategoryListResponse;
-import com.etiya.northwind.business.responses.categories.GetCategoryByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.categories.CategoryListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.categories.GetCategoryByIdResponse;
+import com.etiya.northwind.core.exceptions.BusinessException;
 import com.etiya.northwind.core.utilities.mapping.ModelMapperService;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
+import com.etiya.northwind.core.utilities.results.SuccessDataResult;
+import com.etiya.northwind.core.utilities.results.SuccessResult;
 import com.etiya.northwind.dataAccess.abstracts.CategoryRepository;
 import com.etiya.northwind.entities.concretes.Category;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,38 +38,41 @@ public class CategoryManager implements CategoryService {
     }
 
     @Override
-    public void add(CreateCategoryRequest createCategoryRequest) {
+    public Result add(CreateCategoryRequest createCategoryRequest) {
+        checkIfCategoryNameExist(createCategoryRequest.getCategoryName());
         Category category=this.modelMapperService.forRequest().map(createCategoryRequest,Category.class);
-        categoryRepository.save(category);
+        this.categoryRepository.save(category);
+        return new SuccessResult();
     }
 
     @Override
-    public void update(UpdateCategoryRequest updateCategoryRequest) {
+    public Result update(UpdateCategoryRequest updateCategoryRequest) {
       Category category=this.modelMapperService.forRequest().map(updateCategoryRequest,Category.class);
       categoryRepository.save(category);
+        return new SuccessResult();
 
     }
 
     @Override
-    public void delete(DeleteCategoryRequest deleteCategoryRequest) {
+    public Result delete(DeleteCategoryRequest deleteCategoryRequest) {
         categoryRepository.deleteById(deleteCategoryRequest.getCategoryId());
-
+        return new SuccessResult();
     }
 
     @Override
-    public GetCategoryByIdResponse getById(int id) {
+    public DataResult<GetCategoryByIdResponse> getById(int id) {
         Category category=this.categoryRepository.findById(id);
         GetCategoryByIdResponse getCategoryByIdResponse=this.modelMapperService.forResponse().map(category,GetCategoryByIdResponse.class);
-        return getCategoryByIdResponse;
+        return new SuccessDataResult<>(getCategoryByIdResponse) ;
     }
 
     @Override
-    public List<CategoryListResponse> getAll() {
+    public DataResult<List<CategoryListResponse>> getAll() {
         List<Category> result = this.categoryRepository.findAll();
         List<CategoryListResponse> responses = result.stream().map(category->this.modelMapperService.forResponse()
                 .map(category, CategoryListResponse.class)).collect(Collectors.toList());
 
-        return responses;
+        return  new SuccessDataResult<>(responses) ;
     }
 
 
@@ -105,4 +113,18 @@ public class CategoryManager implements CategoryService {
         else return Sort.by(property).ascending() ;
 
     }
+
+    private void checkIfCategoryNameExist(String name) {
+        Category category = categoryRepository.findByCategoryName(name);
+        if(category != null) {
+            throw new BusinessException("CategoryName Exist");
+        }
+    }
+
+
+
+
+
+
+
 }

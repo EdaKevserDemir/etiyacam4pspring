@@ -1,17 +1,18 @@
 package com.etiya.northwind.business.concretes;
 
 import com.etiya.northwind.business.abstracts.CustomerService;
-import com.etiya.northwind.business.requests.categories.CreateCategoryRequest;
 import com.etiya.northwind.business.requests.customers.CreateCustomerRequest;
 import com.etiya.northwind.business.requests.customers.DeleteCustomerRequest;
 import com.etiya.northwind.business.requests.customers.UpdateCustomerRequest;
-import com.etiya.northwind.business.responses.customers.CustomerListResponse;
-import com.etiya.northwind.business.responses.customers.GetCustomerByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.customers.CustomerListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.customers.GetCustomerByIdResponse;
 import com.etiya.northwind.core.utilities.mapping.ModelMapperService;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
+import com.etiya.northwind.core.utilities.results.SuccessDataResult;
+import com.etiya.northwind.core.utilities.results.SuccessResult;
 import com.etiya.northwind.dataAccess.abstracts.CustomerRepository;
-import com.etiya.northwind.entities.concretes.Category;
 import com.etiya.northwind.entities.concretes.Customer;
-import com.etiya.northwind.entities.concretes.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,40 +41,43 @@ public class CustomerManager implements CustomerService {
     }
 
     @Override
-    public void add(CreateCustomerRequest createCustomerRequest) {
+    public Result add(CreateCustomerRequest createCustomerRequest) {
 
         Customer customer=this.modelMapperService.forResponse().map(createCustomerRequest, Customer.class);
         customerRepository.save(customer);
+        return  new SuccessResult();
     }
 
     @Override
-    public void update(UpdateCustomerRequest updateCustomerRequest) {
+    public Result update(UpdateCustomerRequest updateCustomerRequest) {
 
         Customer customer=this.modelMapperService.forResponse().map(updateCustomerRequest,Customer.class);
         this.customerRepository.save(customer);
+        return  new SuccessResult();
     }
 
     @Override
-    public void delete(DeleteCustomerRequest deleteCustomerRequest) {
+    public Result delete(DeleteCustomerRequest deleteCustomerRequest) {
         this.customerRepository.deleteById(deleteCustomerRequest.getCustomerId());
-
+        return  new SuccessResult();
     }
 
     @Override
-    public GetCustomerByIdResponse getById(String id) {
+    public DataResult<GetCustomerByIdResponse> getById(String id) {
         Customer customer=this.customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Customer not found"));
-       return this.modelMapperService.forResponse().map(customer,GetCustomerByIdResponse.class);
+       return   new SuccessDataResult<>(this.modelMapperService.forResponse().map(customer,GetCustomerByIdResponse.class));
     }
 
 
     @Override
-    public List<CustomerListResponse> getAll() {
+    public DataResult<List<CustomerListResponse>> getAll() {
         List<Customer> result = this.customerRepository.findAll();
         List<CustomerListResponse> responses = result.stream().map(customer -> this.modelMapperService.forResponse().
                 map(customer, CustomerListResponse.class)).collect(Collectors.toList());
 
-        return responses;
+        return new SuccessDataResult<>(responses);
     }
+
     @Override
     public Map<String, Object> getAllPages(int pageNumber, int pageSize) {
         Pageable pageable= PageRequest.of(pageNumber-1,pageSize);

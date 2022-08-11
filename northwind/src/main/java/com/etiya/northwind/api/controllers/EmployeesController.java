@@ -5,8 +5,10 @@ import com.etiya.northwind.business.requests.employees.CreateEmployeeRequest;
 import com.etiya.northwind.business.requests.employees.DeleteEmployeeRequest;
 import com.etiya.northwind.business.requests.employees.UpdateEmployeeRequest;
 
-import com.etiya.northwind.business.responses.employees.EmployeeListResponse;
-import com.etiya.northwind.business.responses.employees.GetEmployeeByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.employees.EmployeeListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.employees.GetEmployeeByIdResponse;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,29 +29,29 @@ public class EmployeesController {
     }
 
     @PostMapping("/add")
-    public void add(@RequestBody CreateEmployeeRequest createEmployeeRequest){
-        this.employeeService.add(createEmployeeRequest);
+    public Result add(@RequestBody CreateEmployeeRequest createEmployeeRequest){
+       return this.employeeService.add(createEmployeeRequest);
 
     }
 
     @PostMapping("/update")
-    public void update(@RequestBody UpdateEmployeeRequest updateEmployeeRequest){
-        this.employeeService.update(updateEmployeeRequest);
+    public Result update(@RequestBody UpdateEmployeeRequest updateEmployeeRequest){
+       return this.employeeService.update(updateEmployeeRequest);
 
     }
     @PostMapping("/delete")
-    public void delete(@RequestBody DeleteEmployeeRequest deleteEmployeeRequest){
-        this.employeeService.delete(deleteEmployeeRequest);
+    public Result delete(@RequestBody DeleteEmployeeRequest deleteEmployeeRequest){
+       return this.employeeService.delete(deleteEmployeeRequest);
     }
 
 
     @GetMapping("/getAll")
-    public List<EmployeeListResponse> getAll() {
+    public DataResult<List<EmployeeListResponse>> getAll() {
 
         return this.employeeService.getAll();
     }
     @GetMapping("/getbyid")
-    public GetEmployeeByIdResponse getById(@RequestParam int id){
+    public DataResult<GetEmployeeByIdResponse> getById(@RequestParam int id){
 
         return this.employeeService.getById(id);
     }

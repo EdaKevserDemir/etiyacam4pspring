@@ -6,16 +6,18 @@ import java.util.Map;
 import com.etiya.northwind.business.requests.products.CreateProductRequest;
 import com.etiya.northwind.business.requests.products.DeleteProductRequest;
 import com.etiya.northwind.business.requests.products.UpdateProductRequest;
-import com.etiya.northwind.business.responses.products.GetProductByIdResponse;
-import com.etiya.northwind.business.responses.products.ProductListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.products.GetProductByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.products.ProductListResponse;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
 import com.etiya.northwind.entities.concretes.Product;
 
 public interface ProductService {
-	void add(CreateProductRequest createProductRequest);
-	void update(UpdateProductRequest updateProductRequest);
-	void delete(DeleteProductRequest deleteProductRequest);
-	GetProductByIdResponse getById(int id);
-	List<ProductListResponse>getAll();
+	Result add(CreateProductRequest createProductRequest);
+	Result update(UpdateProductRequest updateProductRequest);
+	Result delete(DeleteProductRequest deleteProductRequest);
+	DataResult<GetProductByIdResponse>  getById(int id);
+	DataResult<List<ProductListResponse>>getAll();
 
 	Map<String,Object> getAllPages(int pageNumber, int pageSize);
 

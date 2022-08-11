@@ -3,20 +3,22 @@ package com.etiya.northwind.business.abstracts;
 import com.etiya.northwind.business.requests.orderDetails.CreateOrderDetailRequest;
 import com.etiya.northwind.business.requests.orderDetails.DeleteOrderDetailRequest;
 import com.etiya.northwind.business.requests.orderDetails.UpdateOrderDetailRequest;
-import com.etiya.northwind.business.responses.orderDetails.GetOrderDetailByIdResponse;
-import com.etiya.northwind.business.responses.orderDetails.OrderDetailListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.orderDetails.GetOrderDetailByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.orderDetails.OrderDetailListResponse;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
 
 import java.util.List;
 import java.util.Map;
 
 public interface OrderDetailService {
-    void add(CreateOrderDetailRequest createOrderDetailReqest);
-    void update(UpdateOrderDetailRequest updateOrderDetailRequest);
-    void delete(DeleteOrderDetailRequest deleteOrderDetailrequest);
+    Result add(CreateOrderDetailRequest createOrderDetailRequest);
+    Result update(UpdateOrderDetailRequest updateOrderDetailRequest);
+    Result delete(DeleteOrderDetailRequest deleteOrderDetailrequest);
 
-    GetOrderDetailByIdResponse getById(int orderId, int productId);
+    DataResult<GetOrderDetailByIdResponse> getById(int orderId, int productId);
 
-    List<OrderDetailListResponse>getAll();
+    DataResult<List<OrderDetailListResponse>>getAll();
 
     Map<String,Object> getAllPages(int pageNumber, int pageSize);
 

@@ -25,6 +25,13 @@ public class Supplier {
     private String contactTitle;
 
     @OneToMany(mappedBy = "supplier")
-    List<Product> products;
+    private List<Product> products;
 
+    @ManyToOne
+    @JoinColumn(name="country_id")
+    private Country country;
+
+    @ManyToOne
+    @JoinColumn(name="city_id")
+    private City city;
 }

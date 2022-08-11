@@ -4,12 +4,15 @@ import com.etiya.northwind.business.abstracts.EmployeeService;
 import com.etiya.northwind.business.requests.employees.CreateEmployeeRequest;
 import com.etiya.northwind.business.requests.employees.DeleteEmployeeRequest;
 import com.etiya.northwind.business.requests.employees.UpdateEmployeeRequest;
-import com.etiya.northwind.business.responses.categories.CategoryListResponse;
-import com.etiya.northwind.business.responses.employees.EmployeeListResponse;
-import com.etiya.northwind.business.responses.employees.GetEmployeeByIdResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.employees.EmployeeListResponse;
+import com.etiya.northwind.dataAccess.concretes.responses.employees.GetEmployeeByIdResponse;
+import com.etiya.northwind.core.exceptions.BusinessException;
 import com.etiya.northwind.core.utilities.mapping.ModelMapperService;
+import com.etiya.northwind.core.utilities.results.DataResult;
+import com.etiya.northwind.core.utilities.results.Result;
+import com.etiya.northwind.core.utilities.results.SuccessDataResult;
+import com.etiya.northwind.core.utilities.results.SuccessResult;
 import com.etiya.northwind.dataAccess.abstracts.EmployeeRepository;
-import com.etiya.northwind.entities.concretes.Category;
 import com.etiya.northwind.entities.concretes.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,41 +40,43 @@ public class EmployeeManager implements EmployeeService {
     }
 
     @Override
-    public void add(CreateEmployeeRequest createEmployeeRequest) {
+    public Result add(CreateEmployeeRequest createEmployeeRequest) {
+        checkIfSameReportToPerson(createEmployeeRequest.getReportsTo());
         Employee employee=this.modelMapperService.forRequest().map(createEmployeeRequest,Employee.class);
         employeeRepository.save(employee);
-
+        return new SuccessResult();
     }
 
     @Override
-    public void update(UpdateEmployeeRequest updateEmployeeRequest) {
+    public Result update(UpdateEmployeeRequest updateEmployeeRequest) {
         Employee employee=this.modelMapperService.forRequest().map(updateEmployeeRequest,Employee.class);
         employeeRepository.save(employee);
 
-
+        return new SuccessResult();
 
     }
 
     @Override
-    public void delete(DeleteEmployeeRequest deleteEmployeeRequest) {
+    public Result delete(DeleteEmployeeRequest deleteEmployeeRequest) {
 
         this.employeeRepository.deleteById(deleteEmployeeRequest.getEmployeeId());
+        return new SuccessResult();
     }
 
     @Override
-    public GetEmployeeByIdResponse getById(int id) {
+    public DataResult<GetEmployeeByIdResponse> getById(int id) {
 
         Employee employee=this.employeeRepository.findById(id);
         GetEmployeeByIdResponse getEmployeeByIdResponse=this.modelMapperService.forResponse().map(employee,GetEmployeeByIdResponse.class);
-        return  getEmployeeByIdResponse;
+        return new SuccessDataResult<>(getEmployeeByIdResponse) ;
 
     }
 
     @Override
-    public List<EmployeeListResponse> getAll() {
+    public DataResult<List<EmployeeListResponse>> getAll() {
         List<Employee> results = this.employeeRepository.findAll();
         List<EmployeeListResponse> responses = results.stream().map(employee -> this.modelMapperService.forResponse().map(employee,EmployeeListResponse.class)).collect(Collectors.toList());
-        return responses;
+        return new SuccessDataResult<>(responses);
     }
 
     @Override
@@ -110,5 +114,12 @@ public class EmployeeManager implements EmployeeService {
             return Sort.by(property).descending();
         else return Sort.by(property).ascending() ;
 
+    }
+
+    private void checkIfSameReportToPerson(int reportsTo){
+        List<Employee> employees=this.employeeRepository.findEmployeeByReportsTo(reportsTo);
+        if(employees.size()>10){
+            throw new BusinessException("Limits exceed");
+        }
     }
 }
