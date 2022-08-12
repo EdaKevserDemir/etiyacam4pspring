@@ -1,5 +1,6 @@
 package com.etiya.northwind.business.abstracts;
 
+import com.etiya.northwind.business.requests.carts.BuyCartRequest;
 import com.etiya.northwind.business.requests.carts.CreateCartRequest;
 import com.etiya.northwind.business.requests.carts.DeleteCartRequest;
 import com.etiya.northwind.business.requests.carts.UpdateCartRequest;
@@ -21,6 +22,5 @@ public interface CartService {
 
     DataResult<List<CartListResponse>> getAll();
 
-
-
+    Result buyCartProducts(BuyCartRequest buyCartRequest);
 }
