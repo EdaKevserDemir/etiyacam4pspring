@@ -31,8 +31,10 @@ public class CartManager implements CartService {
 
     @Override
     public Result add(CreateCartRequest createCartRequest) {
+
        Cart cart=this.modelMapperService.forRequest().map(createCartRequest,Cart.class);
        this.cartRepository.save(cart);
+       countQuantityAddedProductToCart(createCartRequest.getProductId());
        return new SuccessResult("ADDED");
     }
 
@@ -46,6 +48,7 @@ public class CartManager implements CartService {
     @Override
     public Result delete(DeleteCartRequest deleteCartRequest) {
         this.cartRepository.deleteById(deleteCartRequest.getCartId());
+        countQuantityDeletedProductFromCart(deleteCartRequest.getProductId());
         return new SuccessResult("DELETED");
     }
 
@@ -63,6 +66,17 @@ public class CartManager implements CartService {
                 (cart -> this.modelMapperService.forResponse().map(cart,CartListResponse.class)).collect(Collectors.toList());
         return new SuccessDataResult<>(responses);
     }
-    
+
+    private void countQuantityAddedProductToCart(int productId){
+        Cart cart=this.cartRepository.findByCartId(productId);
+        cart.setQuantity(cart.getQuantity()+1);
+
+    }
+
+    private void countQuantityDeletedProductFromCart(int productId){
+        Cart cart=this.cartRepository.findByCartId(productId);
+        cart.setQuantity(cart.getQuantity()-1);
+
+    }
 
 }

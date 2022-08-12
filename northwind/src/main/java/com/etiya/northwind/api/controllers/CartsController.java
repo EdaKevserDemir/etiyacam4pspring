@@ -38,7 +38,7 @@ public class CartsController {
         return this.cartService.getById(id);
     }
 
-    @GetMapping("getbyid")
+    @GetMapping("getall")
     public DataResult<List<CartListResponse>> getAll(){
         return this.cartService.getAll();
     }

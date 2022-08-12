@@ -20,4 +20,7 @@ public interface CartService {
     DataResult<GetCartsByIdResponse> getById(int id);
 
     DataResult<List<CartListResponse>> getAll();
+
+
+
 }
