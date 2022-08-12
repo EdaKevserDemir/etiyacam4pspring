@@ -33,6 +33,12 @@ public class Product {
 	@Column(name="discontinued")
 	private int discontinued;
 
+	@OneToMany(mappedBy = "product")
+	private List<Cart>cards;
+
+	@ManyToOne
+	@JoinColumn(name="cart_product_detail_id")
+	private CartProductDetail cartProductDetail;
 
 
 }

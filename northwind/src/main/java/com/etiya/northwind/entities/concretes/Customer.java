@@ -29,4 +29,8 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name="city_id")
     private City city;
+
+    @OneToOne
+    @JoinColumn(name = "customer_id")
+    private Cart cart;
 }
