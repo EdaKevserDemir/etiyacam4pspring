@@ -18,7 +18,7 @@ public interface CartService {
     Result update(UpdateCartRequest updateCartRequest);
     Result delete(DeleteCartRequest deleteCartRequest);
 
-    DataResult<GetCartsByIdResponse> getById(int id);
+    DataResult<GetCartsByIdResponse> getById(String customerId);
 
     DataResult<List<CartListResponse>> getAll();
 

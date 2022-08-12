@@ -30,7 +30,7 @@ public class Customer {
     @JoinColumn(name="city_id")
     private City city;
 
-    @OneToOne
+  /*  @OneToOne
     @JoinColumn(name = "customer_id")
-    private Cart cart;
+    private Cart cart;*/
 }

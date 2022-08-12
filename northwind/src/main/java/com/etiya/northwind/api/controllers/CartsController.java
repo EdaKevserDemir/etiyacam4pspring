@@ -17,9 +17,10 @@ import java.util.List;
 public class CartsController {
     private CartService cartService;
 
-    public CartsController(){
-        this.cartService=cartService;
+    public CartsController(CartService cartService) {
+        this.cartService = cartService;
     }
+
     @PostMapping("add")
     public Result add(@RequestBody CreateCartRequest createCartRequest){
         return this.cartService.add(createCartRequest);
@@ -34,8 +35,8 @@ public class CartsController {
     }
 
     @GetMapping("getbyid")
-    public DataResult<GetCartsByIdResponse>getById(int id){
-        return this.cartService.getById(id);
+    public DataResult<GetCartsByIdResponse>getById(String customerId){
+        return this.cartService.getById(customerId);
     }
 
     @GetMapping("getall")

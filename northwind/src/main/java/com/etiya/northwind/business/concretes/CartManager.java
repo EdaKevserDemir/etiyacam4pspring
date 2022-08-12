@@ -60,8 +60,8 @@ public class CartManager implements CartService {
     }
 
     @Override
-    public DataResult<GetCartsByIdResponse> getById(int id) {
-        Cart cart=this.cartRepository.findByCartId(id);
+    public DataResult<GetCartsByIdResponse> getById(String customerId) {
+        Cart cart=this.cartRepository.findCustomerByCartId(customerId);
         GetCartsByIdResponse getCartsByIdResponse=this.modelMapperService.forResponse().map(cart,GetCartsByIdResponse.class);
         return new SuccessDataResult<GetCartsByIdResponse>(getCartsByIdResponse);
     }
